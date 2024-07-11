@@ -3,6 +3,9 @@
 Este proyecto nos muestra una parte de red social tipo (instagram)
 en la que exploradores de EEUU nos comparten fotografias de sus muchos viajes.
 Las tecnologías usadas fueron html, css, ademas de trabajar con JavaScript.
+
+Se implementaron nuevas funciones en la página, como cambiar datos del perfil,
+borrar imagenes ya establecidas, asi como agregar nuevas imagenes de lugares.
 <img
           src="./IMAGENES SPRINT 8 README/Imagen 1.jpg"
           alt="imagen 1"
