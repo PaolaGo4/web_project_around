@@ -5,6 +5,7 @@
   font-family: "Inter";
   display: none;
   z-index: 1;
+  align-content: center;
   background-color: rgba(0, 0, 0, 0.5);
 }
 .popup__container {
@@ -32,8 +33,10 @@
 .popup__container-image {
   display: flex;
   flex-direction: column;
+  width: fit-content;
   max-width: 75vw;
   position: relative;
+  margin: 0 auto;
 }
 .popup__image {
   max-width: 75vw;
