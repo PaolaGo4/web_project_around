@@ -1,5 +1,6 @@
 .elements {
   max-width: 882px;
+  min-height: 50vh;
   margin: 0 auto 67px;
   display: flex;
   flex-wrap: wrap;
