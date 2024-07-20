@@ -50,8 +50,24 @@ initialCards.forEach(function (item) {
 //*popup profile*//
 profileButton.addEventListener("click", openProfile);
 
+function openPopup(popup) {
+  popup.classList.add("popup_opened");
+  document.addEventListener("keydown", keyEscHandler);
+}
+
+//*popups close*//
+function closePopups() {
+  popup.classList.remove("popup_opened");
+  document.removeEventListener("keydown", keyEscHandler);
+}
+
+//*profile popup*//
+
+profileButton.addEventListener("click", openProfile);
+
 function openProfile() {
   popup.classList.add("popup_opened");
+  document.addEventListener("keydown", keyEscHandler);
 }
 
 //*cierre del formulario para el perfil*//
@@ -66,6 +82,7 @@ profileSaveButton.addEventListener("click", SaveAndClose);
 
 function SaveAndClose() {
   popup.classList.remove("popup_opened");
+  document.removeEventListener("keydown", keyEscHandler);
 }
 
 //*seccion para cambios del perfil*//
@@ -76,15 +93,16 @@ function handleProfileFormSubmit(evt) {
 
   const nameInput = document.querySelector("#name").value;
   const jobInput = document.querySelector("#about-me").value;
-
   const profileName = document.querySelector(".profile__name");
   const profileJob = document.querySelector(".profile__info-aboutme");
-
-  profileName.textContent = `${nameInput}`;
-  profileJob.textContent = `${jobInput}`;
-  formElement.reset();
+  if (nameInput !== "" && jobInput !== "") {
+    profileName.textContent = `${nameInput}`;
+    profileJob.textContent = `${jobInput}`;
+    closeProfile();
+  }
 }
-formElement.addEventListener("submit", handleProfileFormSubmit, SaveAndClose);
+
+formElement.addEventListener("submit", handleProfileFormSubmit);
 
 //*popup form-imagenes*//
 
@@ -93,6 +111,7 @@ imageAddButton.addEventListener("click", openImageForm);
 
 function openImageForm() {
   formImage.classList.add("popup_opened");
+  document.addEventListener("keydown", keyEscHandler);
 }
 
 //*se cierra el formulario de las imagenes*//
@@ -100,14 +119,10 @@ formImageCloseButton.addEventListener("click", closeImageForm);
 
 function closeImageForm() {
   formImage.classList.remove("popup_opened");
+  document.removeEventListener("keydown", keyEscHandler);
 }
+
 //*seccion para formulario de las imagenes*//
-
-imageSaveButton.addEventListener("click", imageSaveAndClose);
-
-function imageSaveAndClose() {
-  formImage.classList.remove("popup_opened");
-}
 
 const formImageElement = document.querySelector(".form_image");
 
@@ -116,16 +131,14 @@ function handleImageFormSubmit(evt) {
 
   const titleInput = document.querySelector("#title").value;
   const linkInput = document.querySelector("#url").value;
-  const newNode = createCard(titleInput, linkInput);
-  elementArea.prepend(newNode);
-  formImageElement.reset();
+  if (titleInput !== "" && linkInput !== "") {
+    const newNode = createCard(titleInput, linkInput);
+    elementArea.prepend(newNode);
+    closeImageForm();
+  }
 }
 
-formImageElement.addEventListener(
-  "submit",
-  handleImageFormSubmit,
-  imageSaveAndClose
-);
+formImageElement.addEventListener("submit", handleImageFormSubmit);
 
 //*funcion para que se modifique template*//
 function createCard(title, url) {
@@ -154,6 +167,7 @@ function createCard(title, url) {
     .querySelector(".element__image")
     .addEventListener("click", function (event) {
       popupImage.classList.add("popup_opened");
+      document.addEventListener("keydown", keyEscHandler);
       imageTitlePopup.textContent = event.currentTarget.alt;
       imageSrcPopup.src = event.currentTarget.src;
       imageSrcPopup.alt = event.currentTarget.alt;
@@ -162,6 +176,38 @@ function createCard(title, url) {
 }
 
 //*boton cierre del zoom imagenes*//
-popupImageClose.addEventListener("click", function () {
+
+popupImageClose.addEventListener("click", closeImagePopup);
+
+function closeImagePopup() {
   popupImage.classList.remove("popup_opened");
-});
+  document.removeEventListener("keydown", keyEscHandler);
+}
+
+//*cierre de los formularios cuando se da click en cualquier parte*//
+
+const popupEventListeners = () => {
+  const popupList = Array.from(document.querySelectorAll(".popup"));
+  popupList.forEach((popupElement) => {
+    popupElement.addEventListener("click", function (evt) {
+      if (evt.target.classList.contains("popup")) {
+        closeProfile();
+        closeImageForm();
+        closeImagePopup();
+      }
+    });
+  });
+};
+popupEventListeners();
+
+//*cierre del popup con la tecla esc*//
+
+document.addEventListener("keydown", keyEscHandler);
+
+function keyEscHandler(evt) {
+  if (evt.key === "Escape") {
+    closeProfile();
+    closeImageForm();
+    closeImagePopup();
+  }
+}
