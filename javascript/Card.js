@@ -52,27 +52,30 @@ export default class Card {
     this._element.remove();
   }
   _setEventListeners() {
-    // listener en la imagen para abrir el popup
+	  
+    //*listeners*// 
+	
+	//* imagen para abrir el popup*//
     this._element
       .querySelector(".element__image")
       .addEventListener("click", () => {
         this._handleOpenPopup();
       });
-    // listener para el cierre del popup
+    //* cierre del popup*//
     popupImageCloseButton.addEventListener("click", () => {
       this._handleClosePopup();
     });
-    // listener para el cierre con ESC
+    //* cierre con la tecla ESC*//
     document.addEventListener("keydown", (evt) => {
       this._handleEscKey(evt);
     });
-    //listener para el like
+    //* like *//
     this._element
       .querySelector(".element__like")
       .addEventListener("click", (evt) => {
         this._handleLikeEvent(evt);
       });
-    //listener para el trash button
+    //*trash button*//
     this._element
       .querySelector(".element__trash")
       .addEventListener("click", (evt) => {
