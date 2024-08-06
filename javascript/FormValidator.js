@@ -19,7 +19,7 @@ export default class FormValidator {
       `.${inputElement.name}-error`
     );
     inputElement.classList.remove(this._formConfig.inputErrorClass);
-    errorElement.textContent = "";
+    errorElement.textContent = errorMessage;
     errorElement.classList.remove(this._formConfig.errorClass);
   }
   _checkInputValidity(inputElement) {
