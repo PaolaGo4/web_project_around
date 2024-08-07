@@ -19,7 +19,7 @@
   width: 100%;
   box-sizing: border-box;
   border-bottom: 1px solid #bcbcc4;
-  margin-bottom: 30px;
+  margin-bottom: 15px;
   font-weight: 400;
   font-size: 14px;
   line-height: 17px;
@@ -45,7 +45,7 @@
   color: #fff;
   border: none;
   border-radius: 2px;
-  margin-top: -30px;
+  margin-top: 30px;
 }
 .form__close-icon {
   width: 40.7px;
