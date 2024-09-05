@@ -22,13 +22,8 @@
 .popup_opened {
   display: block;
 }
-.popup__container-zoom {
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+.popup__zoom {
+  max-width: 100vw;
 }
 .popup__container-image {
   display: flex;
@@ -60,6 +55,12 @@
   font-size: 12px;
   line-height: 14.5px;
   margin-top: 10px;
+}
+.popup__container_delete-image {
+  display: flex;
+  flex-direction: column;
+  max-width: 75vw;
+  margin: 0 auto;
 }
 @media screen and (min-width: 320px) and (max-width: 620px) {
   .popup__container {
