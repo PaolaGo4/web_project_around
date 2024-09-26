@@ -1,65 +1,58 @@
-import { popupImage } from "./Card.js";
 const popup = document.querySelector(".popup_profile");
 const profileButton = document.querySelector(".profile__edit-button");
-const profileCloseButton = document.querySelector(".form__close-icon_profile");
 const imageAddButton = document.querySelector(".profile__add-button");
 const formImage = document.querySelector(".popup_form-image");
-const formImageCloseButton = document.querySelector(
-  ".form__close-icon_form-image"
-);
 
-//*popups close*//
-function closePopups() {
-  popup.classList.remove("popup_opened");
-  formImage.classList.remove("popup_opened");
-  popupImage.classList.remove("popup_opened");
-  document.removeEventListener("keydown", keyEscHandler);
-}
-//*popup profile*//
+//*popup image*//
+const popupImage = document.querySelector(".popup_zoom");
 
-profileButton.addEventListener("click", openProfile);
+//*user info*//
+const profileName = document.querySelector(".profile__name");
+const profileJob = document.querySelector(".profile__info-aboutme");
+const nameInput = document.querySelector("#name");
+const jobInput = document.querySelector("#about-me");
 
-function openProfile() {
-  popup.classList.add("popup_opened");
-  document.addEventListener("keydown", keyEscHandler);
-}
-
-//*cierre del formulario para el perfil*//
-profileCloseButton.addEventListener("click", closePopups);
-
-//*se abre el formulario para las imagenes*//
-imageAddButton.addEventListener("click", openImageForm);
-
-function openImageForm() {
-  formImage.classList.add("popup_opened");
-  document.addEventListener("keydown", keyEscHandler);
-}
-
-//*se cierra el formulario de las imagenes*//
-formImageCloseButton.addEventListener("click", closePopups);
-
-//*cierre de los formularios cuando se da click en cualquier parte*//
-
-const popupEventListeners = () => {
-  const popupList = Array.from(document.querySelectorAll(".popup"));
-  popupList.forEach((popupElement) => {
-    popupElement.addEventListener("click", function (evt) {
-      if (evt.target.classList.contains("popup")) {
-        closePopups();
-      }
-    });
-  });
+//*formValidator*//
+const formConfig = {
+  formSelector: ".form",
+  inputSelector: ".form__item",
+  submitButtonSelector: ".form__button",
+  inactiveButtonClass: "form__button_inactive",
+  inputErrorClass: "form__input_type_error",
+  errorClass: "form__error-active",
 };
-popupEventListeners();
 
-//*cierre del popup con la tecla esc*//
+//*popup confirmation*//
+const popupConfirmation = document.querySelector(".popup_delete-image");
 
-document.addEventListener("keydown", keyEscHandler);
+//*popup avatar*//
+const avatarButton = document.querySelector(".profile__avatar");
+const popupAvatar = document.querySelector(".popup_avatar");
+const avatarInput = document.querySelector("#avatar");
+const profileAvatar = document.querySelector(".profile__image-avatar");
 
-function keyEscHandler(evt) {
-  if (evt.key === "Escape") {
-    closePopups();
-  }
-}
+//*botones*//
+const updateProfile = document.querySelector("#update_profile");
+const createImage = document.querySelector("#create_image");
+const updateAvatar = document.querySelector("#update_avatar");
 
-export { closePopups };
+export {
+  profileButton,
+  imageAddButton,
+  popupImage,
+  formImage,
+  profileName,
+  profileJob,
+  popup,
+  nameInput,
+  jobInput,
+  formConfig,
+  popupConfirmation,
+  avatarButton,
+  popupAvatar,
+  avatarInput,
+  profileAvatar,
+  updateProfile,
+  createImage,
+  updateAvatar,
+};

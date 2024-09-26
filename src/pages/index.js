@@ -1,46 +1,78 @@
-import FormValidator from "./FormValidator.js";
-import Card from "./Card.js";
-import { closePopups } from "./utils.js";
+import "./index.css";
+import FormValidator from "../components/FormValidator.js";
+import Card from "../components/Card.js";
+import {
+  profileButton,
+  imageAddButton,
+  popupImage,
+  formImage,
+  profileName,
+  profileJob,
+  popup,
+  nameInput,
+  jobInput,
+  formConfig,
+  popupConfirmation,
+  avatarButton,
+  popupAvatar,
+  avatarInput,
+  profileAvatar,
+} from "../utils/utils.js";
+import Section from "../components/Section.js";
+import PopupWithImage from "../components/PopupWithImage.js";
+import PopupWithForm from "../components/PopupWithForm.js";
+import UserInfo from "../components/UserInfo.js";
+import api from "../components/Api.js";
+import PopupWithConfirmation from "../components/PopupWithConfirmation.js";
 
-const formConfig = {
-  formSelector: ".form",
-  inputSelector: ".form__item",
-  submitButtonSelector: ".form__button",
-  inactiveButtonClass: "form__button_inactive",
-  inputErrorClass: "form__input_type_error",
-  errorClass: "form__error-active",
-};
-const initialCards = [
-  {
-    title: "Valle de Yosemite",
-    link: "https://practicum-content.s3.us-west-1.amazonaws.com/new-markets/WEB_sprint_5/ES/yosemite.jpg",
-  },
-  {
-    title: "Lago Louise",
-    link: "https://practicum-content.s3.us-west-1.amazonaws.com/new-markets/WEB_sprint_5/ES/lake-louise.jpg",
-  },
-  {
-    title: "Montañas Calvas",
-    link: "https://practicum-content.s3.us-west-1.amazonaws.com/new-markets/WEB_sprint_5/ES/bald-mountains.jpg",
-  },
-  {
-    title: "Latemar",
-    link: "https://practicum-content.s3.us-west-1.amazonaws.com/new-markets/WEB_sprint_5/ES/latemar.jpg",
-  },
-  {
-    title: "Parque Nacional de la Vanoise",
-    link: "https://practicum-content.s3.us-west-1.amazonaws.com/new-markets/WEB_sprint_5/ES/vanoise.jpg",
-  },
-  {
-    title: "Lago di Braies",
-    link: "https://practicum-content.s3.us-west-1.amazonaws.com/new-markets/WEB_sprint_5/ES/lago.jpg",
-  },
-];
+const userInfo = new UserInfo({
+  nameSelector: profileName,
+  jobSelector: profileJob,
+});
 
-initialCards.forEach((item) => {
-  const card = new Card(item, ".template");
-  const cardElement = card.generateCard();
-  document.querySelector(".elements").append(cardElement);
+let currentUser = null;
+let cardList = null;
+
+api.getInfo().then((user) => {
+  currentUser = user;
+  userInfo.setUserInfo({ name: user.name, about: user.about });
+  profileAvatar.src = user.avatar;
+  //*apartado para la instancia de Section*//
+  const cardListSelector = ".elements";
+  api.getInitialCards().then((cards) => {
+    cardList = new Section(
+      {
+        data: cards,
+        renderer: (item) => {
+          const card = new Card(item, ".template", currentUser, {
+            handleCardClick: (link, name) =>
+              popupZoom.open({
+                link: link,
+                name: name,
+              }),
+            handleDeleteCard: (cardId, callback) => {
+              popupDeleteCard.open(() => {
+                api.deleteCard(cardId).then(() => {
+                  callback();
+                });
+              });
+            },
+            handleAddLike: (cardId) => {
+              return api.addCardLike(cardId);
+            },
+            handleRemoveLike: (cardId) => {
+              return api.deleteCardLike(cardId);
+            },
+          });
+          const cardElement = card.generateCard();
+          cardList.addItem(cardElement);
+        },
+      },
+      cardListSelector
+    );
+
+    cardList.renderItems();
+  });
 });
 
 const formValidatorProfile = new FormValidator(formConfig, ".popup_profile");
@@ -48,56 +80,96 @@ formValidatorProfile.enableValidation();
 const formValidatorCard = new FormValidator(formConfig, ".popup_form-image");
 formValidatorCard.enableValidation();
 
+const formValidatorAvatar = new FormValidator(formConfig, ".popup_avatar");
+formValidatorAvatar.enableValidation();
+
 const elementArea = document.querySelector(".elements");
 
-//*seccion para cambios del perfil*//
-const formElement = document.querySelector(".popup__form");
+//*apartado para la instancia del zoom image*//
+const popupZoom = new PopupWithImage({ popupSelector: popupImage });
+popupZoom.setEventListener();
 
-function handleProfileFormSubmit(evt) {
-  evt.preventDefault();
+//*apartado para la instancia del popup with form -- form image*//
+const addCardForm = new PopupWithForm({
+  popupSelector: formImage,
+  handleFormSubmit: (formData) => {
+    if (formData.name !== "" && formData.link !== "") {
+      return api.addNewCard(formData.name, formData.link).then((card) => {
+        const newCardImage = new Card(card, ".template", currentUser, {
+          handleCardClick: (link, name) =>
+            popupZoom.open({
+              link: link,
+              name: name,
+            }),
+          handleDeleteCard: (cardId, callback) => {
+            popupDeleteCard.open(() => {
+              api.deleteCard(cardId).then(() => {
+                callback();
+              });
+            });
+          },
+          handleAddLike: (cardId) => {
+            return api.addCardLike(cardId);
+          },
+          handleRemoveLike: (cardId) => {
+            return api.deleteCardLike(cardId);
+          },
+        });
+        const newCardElement = newCardImage.generateCard();
+        elementArea.prepend(newCardElement);
+      });
+    }
+  },
+});
+imageAddButton.addEventListener("click", () => {
+  addCardForm.open();
+});
+addCardForm.setEventListener();
 
-  const nameInput = document.querySelector("#name").value;
-  const jobInput = document.querySelector("#about-me").value;
-  const profileName = document.querySelector(".profile__name");
-  const profileJob = document.querySelector(".profile__info-aboutme");
-  if (nameInput !== "" && jobInput !== "") {
-    profileName.textContent = `${nameInput}`;
-    profileJob.textContent = `${jobInput}`;
-    closePopups();
-  }
-}
-formElement.addEventListener("submit", handleProfileFormSubmit);
+//*apartado para la instancia del popup with form -- form profile*//
 
-//*seccion para formulario de las imagenes*//
+const editProfile = new PopupWithForm({
+  popupSelector: popup,
+  handleFormSubmit: (inputValues) => {
+    if (inputValues.name !== "" && inputValues.about !== "") {
+      return api
+        .updateProfile(inputValues.name, inputValues.about)
+        .then((user) => {
+          userInfo.setUserInfo({ name: user.name, about: user.about });
+          editProfile.close();
+        });
+    }
+  },
+});
 
-const formImageElement = document.querySelector(".form_image");
+profileButton.addEventListener("click", () => {
+  editProfile.open();
+  const userData = userInfo.getUserInfo();
+  nameInput.value = userData.name;
+  jobInput.value = userData.about;
+});
+editProfile.setEventListener();
 
-function handleImageFormSubmit(evt) {
-  evt.preventDefault();
-  const updatedCard = {
-    title: document.querySelector("#title").value,
-    link: document.querySelector("#link").value,
-  };
-  if (updatedCard.title !== "" && updatedCard.link !== "") {
-    const card = new Card(updatedCard, ".template");
-    const cardElement = card.generateCard();
-    elementArea.prepend(cardElement);
-    closePopups();
-  }
-}
+//*apartado para la instancia del popup avatar*//
+const avatarUpdate = new PopupWithForm({
+  popupSelector: popupAvatar,
+  handleFormSubmit: (inputValue) => {
+    if (inputValue.avatar !== "") {
+      return api.updateAvatarProfile(inputValue.avatar).then((user) => {
+        profileAvatar.src = inputValue.avatar;
+      });
+    }
+  },
+});
 
-formImageElement.addEventListener("submit", handleImageFormSubmit);
+avatarButton.addEventListener("click", () => {
+  avatarUpdate.open();
+  avatarInput.value = profileAvatar.src;
+});
+avatarUpdate.setEventListener();
 
-//*cierre de los formularios cuando se da click en cualquier parte*//
-
-const popupEventListeners = () => {
-  const popupList = Array.from(document.querySelectorAll(".popup"));
-  popupList.forEach((popupElement) => {
-    popupElement.addEventListener("click", function (evt) {
-      if (evt.target.classList.contains("popup")) {
-        closePopups();
-      }
-    });
-  });
-};
-popupEventListeners();
+//*inicializacion de popupconfirmation*//
+const popupDeleteCard = new PopupWithConfirmation({
+  popupSelector: popupConfirmation,
+});
+popupDeleteCard.setEventListener();
