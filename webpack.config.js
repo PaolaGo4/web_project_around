@@ -1,7 +1,7 @@
 const path = require("path");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+/*const MiniCssExtractPlugin = require("mini-css-extract-plugin");*/
 
 module.exports = {
   devtool: "inline-source-map",
@@ -36,7 +36,7 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        use: [
+        /*use: [
           MiniCssExtractPlugin.loader,
           {
             loader: "css-loader",
@@ -45,7 +45,7 @@ module.exports = {
             },
           },
           "postcss-loader",
-        ],
+        ],*/
       },
       {
         //* regla para el procesamiento de los archivos *//
@@ -59,6 +59,6 @@ module.exports = {
       template: "./src/index.html", //* es la ruta a nuestro archivo index.html *//
     }),
     new CleanWebpackPlugin(),
-    new MiniCssExtractPlugin(), //* conecta o enlaza el plugin para que se fusionen los archivos CSS *//
+    /*new MiniCssExtractPlugin(), */ //* conecta o enlaza el plugin para que se fusionen los archivos CSS *//
   ],
 };

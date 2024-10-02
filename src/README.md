@@ -6,6 +6,14 @@ Las tecnologías usadas fueron html, css, ademas de trabajar con JavaScript.
 
 Se implementaron nuevas funciones en la página, como cambiar datos del perfil,
 borrar imagenes ya establecidas, asi como agregar nuevas imagenes de lugares.
+
+En esta actualizacion del proyecto se agregaron nuevas funciones como por ejemplo, el mostrar
+cuantos me gusta tiene una imagen (tarjeta), el que aparezca una ventana emergente para borrar
+una imagen (tarjeta), ademas de que se añaden y eliminan likes.
+
+En este proyecto comencé a utilizar JS, donde emplee la programacion orientada de objetos (POO),
+asi como una conexion a API. Usé Webpack para agrupar y refactorizar varias veces para implementar clases y prácticas avanzadas de JS.
+
 <img
           src="./IMAGENES SPRINT 8 README/Imagen 1.jpg"
           alt="imagen 1"
